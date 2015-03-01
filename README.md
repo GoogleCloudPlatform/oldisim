@@ -1,7 +1,5 @@
 # OLDIsim#
 
-# Description #
-
 oldisimulator is a framework to support benchmarks that emulate Online Data-
 Intensive (OLDI) workloads.
 
