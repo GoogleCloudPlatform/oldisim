@@ -1,7 +1,15 @@
 # Description #
 
 oldisimulator is a framework to support benchmarks that emulate Online Data-
-Intensive (OLDI) workloads, such as web search and social networking.
+Intensive (OLDI) workloads.
+
+OLDI workloads are user-facing
+workloads that mine massive datasets across many servers
+* Strict Service Level Objectives (SLO): e.g. 99%-ile tail latency is 5ms
+* High fan-out with large distributed state
+* Extremely challenging to perform power management
+
+Some examples are web search and social networking.
 
 # Prerequisites #
 
