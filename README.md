@@ -13,7 +13,10 @@ Some examples are web search and social networking.
 
 # Prerequisites #
 
-The following are the required to run oldisim from this repo.  Optionally you can run it from the [PerfKitBenchmarker](https://github.com/GoogleCloudPlatform/PerfKitBenchmarker) using 'pkb.py --benchmarks=oldisim --cloud=[GCP|AZURE|AWS|...] ...'.
+The following are the required to run oldisim from this repo.  Optionally you can run it from the [PerfKitBenchmarker](https://github.com/GoogleCloudPlatform/PerfKitBenchmarker) using:
+```
+$ pkb.py --benchmarks=oldisim --cloud=[GCP|AZURE|AWS|...] ...
+```
 
 Requirements:
 * SCons compiler
@@ -34,6 +37,7 @@ To build oldisimulator, run `scons` in the root directory of the project.
 If you need to create static libraries, put the following in a new file named
 custom.py in the project root:
 
+```
 RELEASE=1
 STATICLINK=1
 TCMALLOC=1
@@ -43,6 +47,7 @@ AR='$PATH_TO_AR'
 NM='$PATH_TO_NM'
 CPPPATH=['/usr/include/', '<PATH_TO_BOOST_FILES>']
 LIBPATH='/usr/lib/'
+```
 
 Note that you don’t need to build the boost library, as the dependency on lock
 free queues does not require a built libboost.
@@ -80,7 +85,9 @@ If M is larger than 1, one more machine is needed to enable LoadBalancer.
 Memory container groups and network container groups need to be disabled on each
 machine. You can achieve this by archer a kernel with appropriate flags, i.e.,
 
-archer file -m "<machine_list>" -a "cgroup_disable=net,memory" <kernel pkg>
+```
+$ archer file -m "<machine_list>" -a "cgroup_disable=net,memory" <kernel pkg>
+```
 
 ## Run oldisim ##
 
@@ -90,9 +97,14 @@ Copy the binary (release/workloads/search/LeafNode) to all the machines
 allocated for LeafNode.
 
 Run the following command:
-$PATH_TO_BINARY/LeafNode 
+```
+$ $PATH_TO_BINARY/LeafNode 
+```
 
-You can run "$PATH_TO_BINARY/LeafNode --help" for more usage details.
+You can run the following for more details.
+```
+$ $PATH_TO_BINARY/LeafNode --help
+```
 
 ### step 2. Start RootNode  ###
 
@@ -100,10 +112,14 @@ Copy the binary (release/workloads/search/ParentNode) to all the machines
 allocated for RootNode.
 
 Run the following command:
-$PATH_TO_BINARY/ParentNode --leaf=<LeafNode machine 1> ...
-                           --leaf=<LeafNode machine N>
+```
+$ $PATH_TO_BINARY/ParentNode --leaf=<LeafNode machine 1> ... --leaf=<LeafNode machine N>
+```
 
-You can run "$PATH_TO_BINARY/ParentNode --help" for more usage details.
+You can run the following for more usage details.
+```
+$ $PATH_TO_BINARY/ParentNode --help
+```
 
 ### step 3. Start LoadBalancer (optional) ###
 
@@ -111,8 +127,9 @@ Copy the binary (release/workloads/search/LoadBalancerNode) to the
 machine allocated for LoadBalancerNode.
 
 Run the following command:
-$PATH_TO_BINARY/LoadBalancerNode --parent=<RootNode machine 1> ...
-                                 --parent=<RootNode machine M>
+```
+$ $PATH_TO_BINARY/LoadBalancerNode --parent=<RootNode machine 1> ... --parent=<RootNode machine M>
+```
 
 You can run "$PATH_TO_BINARY/LoadBalancerNode --help" for more usage details.
 
@@ -122,8 +139,12 @@ Copy the binary (release/workloads/search/DriverNode) to the machine
 allocated for DriverNode.
 
 Run the following command:
-$PATH_TO_BINARY/DriverNode --server=<RootNode machine 1> ...
-                           --server=<RootNode machine M>
+```
+$ $PATH_TO_BINARY/DriverNode --server=<RootNode machine 1> ... --server=<RootNode machine M>
+```
 
-You can run "$PATH_TO_BINARY/DriverNode --help" for more usage details.
+You can run the following for more usage details.
+```
+$PATH_TO_BINARY/DriverNode --help
+```
 
