@@ -13,16 +13,19 @@ Some examples are web search and social networking.
 
 # Prerequisites #
 
-To build oldisim you need to have SCons compiler installed in your system.
+The following are the required to run oldisim from this repo.  Optionally you can run it from the [PerfKitBenchmarker](https://github.com/GoogleCloudPlatform/PerfKitBenchmarker) using 'pkb.py --benchmarks=oldisim --cloud=[GCP|AZURE|AWS|...] ...'.
 
-oldisim requires a C++11 compatible compiler, e.g., g++ v.4.7.3 or later
-versions. It also depends on several other external libraries. Below are the
-commands to install the required packages:
+Requirements:
+* SCons compiler
+* C++11 compatible compiler, e.g., g++ v.4.7.3 or later
+versions. 
+* Boost version 1.5.3
 
+Install the requirements with:
+```
 $ sudo apt-get install build-essential gengetopt libgoogle-perftools-dev
 libunwind7-dev libevent-dev scons libboost-all-dev
-
-Note that Boost version 1.5.3 or greater is required.
+```
 
 # Build oldisim #
 
