@@ -1,4 +1,4 @@
-# OLDIsim an 0nline Data-Intensive workload framework #
+# OLDIsim#
 
 # Description #
 
