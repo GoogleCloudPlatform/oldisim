@@ -82,13 +82,6 @@ DriverNode.
 
 If M is larger than 1, one more machine is needed to enable LoadBalancer.
 
-Memory container groups and network container groups need to be disabled on each
-machine. You can achieve this by archer a kernel with appropriate flags, i.e.,
-
-```
-$ archer file -m "<machine_list>" -a "cgroup_disable=net,memory" <kernel pkg>
-```
-
 ## Run oldisim ##
 
 ### step 1. Start LeafNode ###
