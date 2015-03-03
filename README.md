@@ -22,7 +22,8 @@ Requirements:
 * SCons compiler
 * C++11 compatible compiler, e.g., g++ v.4.7.3 or later
 versions.
-* Boost version 1.5.3
+* Boost version 1.53 or higher (included).
+* Cereal (included as a submodule).
 
 Install the requirements with:
 ```
@@ -32,7 +33,8 @@ libunwind7-dev libevent-dev scons libboost-all-dev
 
 # Build oldisim #
 
-To build oldisimulator, run `scons` in the root directory of the project.
+To build oldisimulator, ensure that all submodules are available (`git
+submodule update --init`) and run `scons` in the root directory of the project.
 
 If you need to create static libraries, put the following in a new file named
 custom.py in the project root:
