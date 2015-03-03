@@ -21,7 +21,7 @@ $ pkb.py --benchmarks=oldisim --cloud=[GCP|AZURE|AWS|...] ...
 Requirements:
 * SCons compiler
 * C++11 compatible compiler, e.g., g++ v.4.7.3 or later
-versions. 
+versions.
 * Boost version 1.5.3
 
 Install the requirements with:
@@ -54,9 +54,10 @@ free queues does not require a built libboost.
 
 To speedup compilation, scons supports parallel compilation, e.g. `scons
 -j12` to compile with 12 threads in parallel. There are two build modes,
-**release** and **debug**. The default build mode is **release**. The build
-mode is specified via the **mode** flag, e.g. `scons mode=release`.
-The output of the builds will be put into *BUILD_MODE*/
+**release** and **debug**. The default build mode is **release**.
+**debug** mode may be specified by passing `RELEASE=0` to `scons`, e.g. `scons
+RELEASE=0`.
+The output of the builds will be put into `<BUILD_MODE>/`
 
 There are several output directories in the build, corresponding to the
 different parts of oldisimulator.
@@ -91,7 +92,7 @@ allocated for LeafNode.
 
 Run the following command:
 ```
-$ $PATH_TO_BINARY/LeafNode 
+$ $PATH_TO_BINARY/LeafNode
 ```
 
 ### step 2. Start RootNode  ###
