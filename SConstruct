@@ -31,6 +31,7 @@ if env['RELEASE']:
   env.Append(CCFLAGS=['-O3', '-DNDEBUG'])
 else:
   mymode = 'debug'
+  env.Append(CCFLAGS=['-Wall', '-Wextra'])
 
 #tell the user what we're doing
 print '**** Compiling in ' + mymode + ' mode...'
