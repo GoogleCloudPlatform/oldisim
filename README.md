@@ -43,10 +43,10 @@ custom.py in the project root:
 RELEASE=1
 STATICLINK=1
 TCMALLOC=1
-CXX='$PATH_TO_g++$'
-LD='$PATH_TO_LD'
-AR='$PATH_TO_AR'
-NM='$PATH_TO_NM'
+CXX='<PATH_TO_g++>'
+LD='<PATH_TO_LD>'
+AR='<PATH_TO_AR>'
+NM='<PATH_TO_NM>'
 CPPPATH=['/usr/include/', '<PATH_TO_BOOST_FILES>']
 LIBPATH='/usr/lib/'
 ```
