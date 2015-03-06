@@ -1,0 +1,98 @@
+# Copyright 2015 Google Inc. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Get all the build variables
+Import('env', 'project', 'buildroot', 'oldisim_lib_path')
+localenv = env.Clone()
+
+builddir = buildroot + '/' + project 
+
+# Specify the build directory
+localenv.VariantDir(builddir, ".")
+
+localenv.Append(CCFLAGS  = ['-std=c++11', '-D_GNU_SOURCE', '-ggdb'])
+
+conf = localenv.Configure()
+conf.Define("__STDC_FORMAT_MACROS")
+
+if not conf.CheckCXX():
+  print "A compiler with C++11 support is required."
+  Exit(1)
+
+conf.CheckLib("rt", "clock_gettime", language="C++")
+
+if not conf.CheckLibWithHeader("event", "event2/event.h", "C++"):
+  print "libevent required"
+
+import SCons
+if SCons.Conftest.CheckLib(SCons.SConf.CheckContext(conf), ["event_pthreads"], "evthread_use_pthreads", extra_libs=["event", "rt"], language="C++"):
+  print "libevent_pthreads required"
+  Exit(1)
+
+if not conf.CheckLibWithHeader("pthread", "pthread.h", "C++"):
+  print "pthread required"
+  Exit(1)
+
+# Use TCMalloc
+if env['TCMALLOC']:
+  # Only need unwind on a static link
+  tcmalloc_extralibs = []
+  if env['STATICLINK']:
+    tcmalloc_extralibs = ["unwind"]
+  if SCons.Conftest.CheckLib(SCons.SConf.CheckContext(conf), ["tcmalloc"], extra_libs=tcmalloc_extralibs, language="C++"):
+    print "tcmalloc required"
+    Exit(1)
+
+localenv = conf.Finish()
+
+# Must go first so the linker doesn't throw away unused symbols
+localenv.Prepend(LIBS = ['oldisim'])
+localenv.Append(LIBPATH = [oldisim_lib_path])
+
+cur_dir = Dir('.').srcnode().abspath
+
+obj_mapper = lambda src_list: map(lambda x: builddir + '/' + x, src_list)
+
+localenv.Command(obj_mapper(['PointerChaseTestCmdline.cc', 'PointerChaseTestCmdline.h']), 'PointerChaseTestCmdline.ggo', 'gengetopt < $SOURCE --file-name='+Dir(builddir).abspath+'/PointerChaseTestCmdline')
+localenv.Program(target=builddir+'/PointerChaseTest',
+                 source=obj_mapper(['PointerChaseTest.cc', 'PointerChase.cc', 'PointerChaseTestCmdline.cc']))
+
+icache_buster_num_splits = 24
+localenv.Command(obj_mapper(['ICacheBuster.part%d.cc' % i for i in xrange(icache_buster_num_splits)] + ['ICacheBuster.cc', 'ICacheBuster.h']), 'gen_icache_buster.py', 'python $SOURCE --num_methods 100000 --num_splits %d --output_dir %s' % (icache_buster_num_splits, Dir(builddir).abspath))
+localenv.Command(obj_mapper(['ICacheBusterTestCmdline.cc', 'ICacheBusterTestCmdline.h']), 'ICacheBusterTestCmdline.ggo', 'gengetopt < $SOURCE --file-name='+Dir(builddir).abspath+'/ICacheBusterTestCmdline')
+icache_buster_lib_src = obj_mapper(['ICacheBuster.cc']+['ICacheBuster.part%d.cc' % i for i in xrange(icache_buster_num_splits)])
+localenv.Program(target=builddir+'/ICacheBusterTest',
+                 source=obj_mapper(['ICacheBusterTest.cc', 'ICacheBusterTestCmdline.cc'])+icache_buster_lib_src)
+
+localenv.Program(target=builddir+'/NopLoop',
+                 source=obj_mapper(['NopLoop.cc']))
+
+localenv.Program(target=builddir+'/LeafKernel',
+                 source=obj_mapper(['LeafKernel.cc', 'PointerChase.cc'])+icache_buster_lib_src)
+
+localenv.Command(obj_mapper(['LeafNodeCmdline.cc', 'LeafNodeCmdline.h']), 'LeafNodeCmdline.ggo', 'gengetopt < $SOURCE --file-name='+Dir(builddir).abspath+'/LeafNodeCmdline')
+localenv.Program(target=builddir+'/LeafNode',
+                 source=obj_mapper(['LeafNode.cc', 'PointerChase.cc', 'HistogramRandomSampler.cc', 'LeafNodeCmdline.cc'])+icache_buster_lib_src)
+
+localenv.Command(obj_mapper(['ParentNodeCmdline.cc', 'ParentNodeCmdline.h']), 'ParentNodeCmdline.ggo', 'gengetopt < $SOURCE --file-name='+Dir(builddir).abspath+'/ParentNodeCmdline')
+localenv.Program(target=builddir+'/ParentNode',
+                 source=obj_mapper(['ParentNode.cc', 'ParentNodeCmdline.cc']))
+
+localenv.Command(obj_mapper(['LoadBalancerNodeCmdline.cc', 'LoadBalancerNodeCmdline.h']), 'LoadBalancerNodeCmdline.ggo', 'gengetopt < $SOURCE --file-name='+Dir(builddir).abspath+'/LoadBalancerNodeCmdline')
+localenv.Program(target=builddir+'/LoadBalancerNode',
+                 source=obj_mapper(['LoadBalancerNode.cc', 'LoadBalancerNodeCmdline.cc']))
+
+localenv.Command(obj_mapper(['DriverNodeCmdline.cc', 'DriverNodeCmdline.h']), 'DriverNodeCmdline.ggo', 'gengetopt < $SOURCE --file-name='+Dir(builddir).abspath+'/DriverNodeCmdline')
+localenv.Program(target=builddir+'/DriverNode',
+                 source=obj_mapper(['DriverNode.cc', 'DriverNodeCmdline.cc']))
