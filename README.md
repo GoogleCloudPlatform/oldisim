@@ -1,22 +1,19 @@
-# OLDIsim#
+# OLDIsim
 
-oldisimulator is a framework to support benchmarks that emulate Online Data-
+oldisim is a framework to support benchmarks that emulate Online Data-
 Intensive (OLDI) workloads.
 
-OLDI workloads are user-facing
-workloads that mine massive datasets across many servers
+OLDI workloads are user-facing workloads that mine massive datasets across many servers
 * Strict Service Level Objectives (SLO): e.g. 99%-ile tail latency is 5ms
 * High fan-out with large distributed state
 * Extremely challenging to perform power management
 
 Some examples are web search and social networking.
 
-# Prerequisites #
+# Run oldisim in a local cluster
+## Prerequisites
 
-The following are the required to run oldisim from this repo.  Optionally you can run it from the [PerfKitBenchmarker](https://github.com/GoogleCloudPlatform/PerfKitBenchmarker) using:
-```
-$ pkb.py --benchmarks=oldisim --cloud=[GCP|AZURE|AWS|...] ...
-```
+The following are the required to build oldisim from this repo.
 
 Requirements:
 * SCons compiler
@@ -31,9 +28,9 @@ $ sudo apt-get install build-essential gengetopt libgoogle-perftools-dev
 libunwind7-dev libevent-dev scons libboost-all-dev
 ```
 
-# Build oldisim #
+## Build oldisim
 
-To build oldisimulator, ensure that all submodules are available (`git
+To build oldisim, ensure that all submodules are available (`git
 submodule update --init`) and run `scons` in the root directory of the project.
 
 If you need to create static libraries, put the following in a new file named
@@ -62,12 +59,12 @@ RELEASE=0`.
 The output of the builds will be put into `<BUILD_MODE>/`
 
 There are several output directories in the build, corresponding to the
-different parts of oldisimulator.
+different parts of oldisim.
 
 + *BUILD_MODE*/oldisim contains the oldisim framework libraries
 + *BUILD_MODE*/workloads contains the binaries of the workloads built
 
-# Run oldisim: search on the cluster #
+## Run oldisim: search on the cluster
 
 This benchmark emulates the fanout and request time distribution for web search.
 It models an example tree-based search topology. A user query is first processed
@@ -77,7 +74,7 @@ The search benchmark consists of four modules - RootNode, LeafNode, DriverNode,
 and LoadBalancer. Note that LoadBalancer is only needed when there exist more
 than one root.
 
-## Prepare the cluster ##
+### Prepare the cluster
 
 To emulate a tree topology with M roots and N leafs, your cluster needs to have
 M machines to run RootNode, N machines to run LeafNode and one machine to run
@@ -85,19 +82,17 @@ DriverNode.
 
 If M is larger than 1, one more machine is needed to enable LoadBalancer.
 
-## Run oldisim ##
-
-### step 1. Start LeafNode ###
+### Start the LeafNode
 
 Copy the binary (release/workloads/search/LeafNode) to all the machines
 allocated for LeafNode.
 
 Run the following command:
 ```
-$ $PATH_TO_BINARY/LeafNode
+$ PATH_TO_BINARY/LeafNode
 ```
 
-### step 2. Start RootNode  ###
+### Start the RootNode
 
 Copy the binary (release/workloads/search/ParentNode) to all the machines
 allocated for RootNode.
@@ -107,7 +102,7 @@ Run the following command:
 $ PATH_TO_BINARY/ParentNode --leaf=<LeafNode machine 1> ... --leaf=<LeafNode machine N>
 ```
 
-### step 3. Start LoadBalancer (optional) ###
+### Start the LoadBalancer (optional)
 
 Copy the binary (release/workloads/search/LoadBalancerNode) to the
 machine allocated for LoadBalancerNode.
@@ -117,7 +112,7 @@ Run the following command:
 $ PATH_TO_BINARY/LoadBalancerNode --parent=<RootNode machine 1> ... --parent=<RootNode machine M>
 ```
 
-### step 4. Start DriverNode ###
+### Start the DriverNode
 
 Copy the binary (release/workloads/search/DriverNode) to the machine
 allocated for DriverNode.
@@ -128,3 +123,23 @@ $ PATH_TO_BINARY/DriverNode --server=<RootNode machine 1> ... --server=<RootNode
 ```
 
 You can run with the '--help' flag for more usage details.
+
+# Run oldisim from PerfKitBenchmarker
+Optionally you can run oldisim from the [PerfKitBenchmarker](https://github.com/GoogleCloudPlatform/PerfKitBenchmarker) using:
+```
+$ ./pkb.py --benchmarks=oldisim --cloud=[GCP|AZURE|AWS|...] ... --num_leaves=[1|2|...|64] --fanout=[1,2,...] --latency_target=[1|2|...] --latency_metric=[avg|50p|90p|95p|99p|99.9p]
+```
+## Example run on GCP
+```
+$ ./pkb.py --project=<GCP project ID> --benchmarks=oldisim --machine_type=f1-micro --num_leaves=4 --fanout=1,2,3,4 --latency_target=40 --latency_metric=avg
+```
+
+## Example run on AWS
+```
+$ ./pkb.py --cloud=AWS --benchmarks=oldisim --machine_type=t1.micro --num_leaves=4 --fanout=1,2,3,4 --latency_target=40 --latency_metric=avg
+```
+
+## Example run on Azure
+```
+$ ./pkb.py --cloud=Azure --machine_type=ExtraSmall --benchmarks=oldisim --num_leaves=4 --fanout=1,2,3,4 --latency_target=40 --latency_metric=avg
+```
