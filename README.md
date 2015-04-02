@@ -131,15 +131,15 @@ $ ./pkb.py --benchmarks=oldisim --cloud=[GCP|AZURE|AWS|...] ... --num_leaves=[1|
 ```
 ## Example run on GCP
 ```
-$ ./pkb.py --project=<GCP project ID> --benchmarks=oldisim --machine_type=f1-micro --num_leaves=4 --fanout=1,2,3,4 --latency_target=40 --latency_metric=avg
+$ ./pkb.py --project=<GCP project ID> --benchmarks=oldisim --machine_type=f1-micro --oldisim_num_leaves=4 --oldisim_fanout=1,2,3,4 --oldisim_latency_target=40 --oldisim_latency_metric=avg
 ```
 
 ## Example run on AWS
 ```
-$ ./pkb.py --cloud=AWS --benchmarks=oldisim --machine_type=t1.micro --num_leaves=4 --fanout=1,2,3,4 --latency_target=40 --latency_metric=avg
+$ ./pkb.py --cloud=AWS --benchmarks=oldisim --machine_type=t1.micro --oldisim_num_leaves=4 --oldisim_fanout=1,2,3,4 --oldisim_latency_target=40 --oldisim_latency_metric=avg
 ```
 
 ## Example run on Azure
 ```
-$ ./pkb.py --cloud=Azure --machine_type=ExtraSmall --benchmarks=oldisim --num_leaves=4 --fanout=1,2,3,4 --latency_target=40 --latency_metric=avg
+$ ./pkb.py --cloud=Azure --machine_type=ExtraSmall --benchmarks=oldisim --oldisim_num_leaves=4 --oldisim_fanout=1,2,3,4 --oldisim_latency_target=40 --oldisim_latency_metric=avg
 ```
