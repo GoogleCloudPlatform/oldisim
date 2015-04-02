@@ -127,7 +127,7 @@ You can run with the '--help' flag for more usage details.
 # Run oldisim from PerfKitBenchmarker
 Optionally you can run oldisim from the [PerfKitBenchmarker](https://github.com/GoogleCloudPlatform/PerfKitBenchmarker) using:
 ```
-$ ./pkb.py --benchmarks=oldisim --cloud=[GCP|AZURE|AWS|...] ... --num_leaves=[1|2|...|64] --fanout=[1,2,...] --latency_target=[1|2|...] --latency_metric=[avg|50p|90p|95p|99p|99.9p]
+$ ./pkb.py --benchmarks=oldisim --cloud=[GCP|AZURE|AWS|...] ... --oldisim_num_leaves=[1|2|...|64] --oldisim_fanout=[1,2,...] --oldisim_latency_target=[1|2|...] --oldisim_latency_metric=[avg|50p|90p|95p|99p|99.9p]
 ```
 ## Example run on GCP
 ```
