@@ -151,4 +151,6 @@ Scaling efficiency of 2 leaves 0.92
 Scaling efficiency of 3 leaves 0.89 
 Scaling efficiency of 4 leaves 0.88 
 ```
-The scaling efficiency of N leaves is calculated by dividing its QPS by the QPS with one leaf node. It measures the penalty of scaling out to a larger fanout. The QPS loss mainly comes from performance variation among nodes (limited by the slowest one).
+The scaling efficiency of N leaves is calculated by dividing its QPS by the QPS with one leaf node. It measures the efficiency of scaling out to multiple nodes (or sharding). Sharding happens when we need to handle large data volumes (e.g. data cannot fit in one machine) and high query loads. It also helps to avoid a single point of failure.  
+
+Due to performance variation among machines, QPS with sharding is usually limited by the slowest node. This will cause a QPS loss comparing to the single node case. The goal of oldisim is to provide an accurate measurement for the scaling efficiency of sharding. 
