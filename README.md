@@ -143,3 +143,12 @@ $ ./pkb.py --cloud=AWS --benchmarks=oldisim --machine_type=t1.micro --oldisim_nu
 ```
 $ ./pkb.py --cloud=Azure --machine_type=ExtraSmall --benchmarks=oldisim --oldisim_num_leaves=4 --oldisim_fanout=1,2,3,4 --oldisim_latency_target=40 --oldisim_latency_metric=avg
 ```
+# oldisim output
+Below is a sample output of oldisim running with 4 leaves.
+```
+Scaling efficiency of 1 leaves 1.0 
+Scaling efficiency of 2 leaves 0.92 
+Scaling efficiency of 3 leaves 0.89 
+Scaling efficiency of 4 leaves 0.88 
+```
+The scaling efficiency of N leaves is calculated by dividing its QPS by the QPS with one leaf node. It measures the penalty of scaling out to a larger fanout. The QPS loss mainly comes from performance variation among nodes (limited by the slowest one).
